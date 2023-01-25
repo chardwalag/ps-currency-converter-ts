@@ -1,0 +1,72 @@
+
+.search {
+  display: flex;
+  color: #808080;
+  background-color: white;
+  border: 2px #808080 solid;
+  border-radius: 5px;
+}
+
+.search input, img {
+  border: 1px white;
+}
+
+.search input {
+  width: 310px;
+  height: 30px;
+  padding-left: 5px;
+}
+
+@media only screen and (min-width: 361px) and ( max-width: 375px ) {
+  .search input {
+    width: 290px;
+  }
+}
+
+@media only screen and (min-width: 281px) and ( max-width: 360px ) {
+  .search input {
+    width: 280px;
+  }
+}
+
+@media only screen and ( max-width: 280px ) {
+  .search input {
+    width: 200px;
+  }
+}
+
+.search input:focus {
+  outline: none;
+}
+
+.search .magnify {
+  align-self: center;
+}
+
+.error {
+  background-color: #ffebeb;
+  color: #ff5957;
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.conversion {
+  display: flex;
+  padding-left: 5px;
+  margin-top: 10px;
+  border: 2px #808080 solid;
+  border-radius: 5px;
+}
+
+.conversion .currency {
+  width: 310px;
+}
+
+.conversion .currency .target-currency {
+  font-size: x-large;
+}
+
+.conversion .swap {
+  align-self: center;
+}

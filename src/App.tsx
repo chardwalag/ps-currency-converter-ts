@@ -1,25 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './App.css';
 
 import Header from './components/Header';
-import { fetchRates } from './utils/api';
+import Converter from './components/Converter';
+import PreviousConversion from './components/PreviousConversion';
+import { convertCurrency, getSymbols } from './utils/api';
+
 
 const App = () => {
-  const handleSubmit = async () => {
-    try {
-      const rates = await fetchRates('EUR');
-      console.log(rates);
-    } catch (e: any) {
-      console.error(e.message);
+  const [ symbols, setSymbols ] = useState({})
+
+  useEffect(() => {
+    const symbols = localStorage.getItem( 'symbols' )
+    if ( symbols ) {
+      setSymbols( JSON.parse( symbols ))
     }
-  };
+    else {
+      getSymbols().then( symbols => {
+        localStorage.setItem( 'symbols', JSON.stringify( symbols ))
+        setSymbols( symbols )
+      })
+    }
+  }, [])
 
   return (
     <div className="app">
       <div className="app__content">
         <Header />
-        <button onClick={handleSubmit}>get rates</button>
+        <Converter symbols={symbols} />
+        <PreviousConversion />
       </div>
     </div>
   );
