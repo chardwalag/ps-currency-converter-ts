@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Pagination } from 'antd';
 
 import './App.css';
 
@@ -10,8 +11,9 @@ import { ConversionResult } from './utils/type';
 
 
 const App = () => {
-  const [ symbols, setSymbols ] = useState({}),
+  const [ symbols, setSymbols ] = useState<{[ key: string ]: string }>({}),
   [ history, setHistory ] = useState<ConversionResult[]>([]),
+  [ page, setPage ] = useState( 1 ),
 
   saveHistory = ( conversions: ConversionResult[]) => {
     setHistory( conversions )
@@ -26,6 +28,10 @@ const App = () => {
     const conversions = [ ...history ]
     conversions.splice( idx, 1 )
     saveHistory( conversions )
+  },
+
+  handlePage = ( page: number ) => {
+    setPage( page )
   }
 
   useEffect(() => {
@@ -55,10 +61,20 @@ const App = () => {
         {
           0 < history.length &&
           <History
-            history={ history }
+            history={ history.slice( 10 * ( page - 1 ), 10 * page )}
             symbols={ symbols }
             clear={ clearConversionHistory }
             removeItem={ removeConversion }
+          />
+        }
+        {
+          10 < history.length &&
+          <Pagination 
+            className="pagination"
+            total={ history.length }
+            current={ page }
+            showTotal={ total => `${total} items`}
+            onChange={ handlePage }
           />
         }
       </div>

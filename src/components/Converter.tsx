@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useRef } from 'react';
 
 import './Converter.css';
 import swapIcon from '../svg/swap-vertical.svg';
@@ -21,6 +21,7 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
   const [ inputString, setInputString ] = useState( '' ),
   [ errorMessage, setErrorMessage ] = useState( '' ),
   [ conversion, setConversion ] = useState< ConversionResult | null >( null ),
+  inputEl = useRef< HTMLInputElement >( null ),
   [ inputButtonIcon, setInputButtonIcon ] = useState< InputIcon >( InputIcon.MAGNIFY ),
 
   handleInput = () => {
@@ -32,6 +33,7 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
     if ( InputIcon.CLEAR === inputButtonIcon ) {
       setInputButtonIcon( InputIcon.MAGNIFY )
       setInputString( '' )
+      inputEl.current?.focus()
       return
     }
 
@@ -43,6 +45,8 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
         setErrorMessage( `Base '${ fromCurrency }' is not supported.` )
       else if ( !symbols[ toCurrency ])
         setErrorMessage( `Base '${ toCurrency }' is not supported.` )
+      else if ( fromCurrency === toCurrency )
+        setErrorMessage( `Currencies should not be the same` )
       else if ( 0 >= fromAmount )
         setErrorMessage( 'Amount should be greater than 0.' )
       else {
@@ -103,16 +107,17 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
           <input
             type="text"
             placeholder="e.g. 1 AUD to USD"
-            value={inputString}
-            onChange={handleInputUpdate}
-            onFocus={handleFocus}
+            value={ inputString }
+            ref={ inputEl }
+            onChange={ handleInputUpdate }
+            onFocus={ handleFocus }
           />
         </div>
         <div className="magnify">
-          <img src={InputIcon.MAGNIFY === inputButtonIcon ? magnifyIcon : closeIcon} alt="magnify" onClick={handleInput}/>
+          <img src={ InputIcon.MAGNIFY === inputButtonIcon ? magnifyIcon : closeIcon } alt="magnify" onClick={ handleInput }/>
         </div>
       </div>
-      { errorMessage && <div className="error">{errorMessage}</div>}
+      { errorMessage && <div className="error">{ errorMessage }</div>}
       { conversion &&
         <div className='conversion'>
           <div className="currency">
@@ -124,7 +129,7 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
             </div>
           </div>
           <div className="swap">
-            <img src={swapIcon} alt="swap" onClick={handleSwap} />
+            <img src={ swapIcon } alt="swap" onClick={ handleSwap } />
           </div>
         </div>
       }

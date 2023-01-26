@@ -11,3 +11,8 @@
   max-width: 350px;
   margin-top: 10vh;
 }
+
+.pagination {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
