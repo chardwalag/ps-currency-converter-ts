@@ -1,0 +1,61 @@
+
+.history-header {
+  margin-top: 20px;
+  display: flex;
+}
+
+.history-header .label {
+  width: 270px;
+}
+
+@media only screen and (max-width: 375px) {
+  .history-header .label {
+    width: 255px;
+  }
+}
+
+@media only screen and (max-width: 360px) {
+  .history-header .label {
+    width: 240px;
+  }
+}
+
+@media only screen and (max-width: 280px) {
+  .history-header .label {
+    width: 160px;
+  }
+}
+
+.history-header .label h3 {
+  margin: 0;
+}
+
+.history-header .clear {
+  align-self: flex-end;
+}
+
+.history-header .clear button {
+  background-color: white;
+  border: 1px white;
+  padding-right: 0;
+}
+
+.history .previous-amount {
+  display: flex;
+  background-color: #e3e3e3;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.history .previous-amount .currency {
+  width: 310px;
+}
+
+.history .previous-amount .currency .target-currency {
+  font-size: x-large;
+}
+
+.history .previous-amount .close {
+  align-self: center;
+}

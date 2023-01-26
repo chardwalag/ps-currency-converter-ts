@@ -14,7 +14,7 @@ const Converter: FC<{ symbols: {}}> = ({ symbols }) => {
   return (
     <>
       <div className="search">
-        <div>
+        <div className="search-input">
           <input type="text" placeholder="e.g. 1 AUD to USD" />
         </div>
         <div className="magnify">

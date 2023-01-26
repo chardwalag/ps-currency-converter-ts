@@ -7,12 +7,16 @@
   border-radius: 5px;
 }
 
+.search .search-input {
+  width: 90%;
+}
+
 .search input, img {
   border: 1px white;
 }
 
 .search input {
-  width: 310px;
+  width: 100%;
   height: 30px;
   padding-left: 5px;
 }

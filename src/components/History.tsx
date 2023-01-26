@@ -1,12 +1,12 @@
 import React from 'react';
 
-import './PreviousConversion.css';
+import './History.css';
 import close from '../svg/close.svg';
 
 
-const PreviousConversion = () => (
+const History = () => (
   <>
-    <div className="header">
+    <div className="history-header">
       <div className="label"><h3>Previous amounts</h3></div>
       <div className="clear">
         <button>CLEAR ALL</button>
@@ -44,4 +44,4 @@ const PreviousConversion = () => (
   </>
 );
 
-export default PreviousConversion;
+export default History;
