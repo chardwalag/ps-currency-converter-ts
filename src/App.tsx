@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Pagination } from 'antd';
 
 import './App.css';
@@ -73,7 +73,8 @@ const App = () => {
             className="pagination"
             total={ history.length }
             current={ page }
-            showTotal={ total => `${total} items`}
+            showSizeChanger={ false }
+            showTotal={ total => `${ total } items`}
             onChange={ handlePage }
           />
         }
