@@ -1,8 +1,9 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
+import React, { FC, useState } from 'react';
 
 import './Converter.css';
 import swapIcon from '../svg/swap-vertical.svg';
 import magnifyIcon from '../svg/magnify.svg';
+import closeIcon from '../svg/close.svg';
 
 import { convertCurrency } from '../utils/api';
 import { parseInput } from '../utils/parseInput';
@@ -11,34 +12,66 @@ import { ConversionResult } from '../utils/type';
 
 type Conversion = {
   symbols: {[ key: string ]: string },
-  onConversion: ( conversion: ConversionResult ) => void
+  saveConversion: ( conversion: ConversionResult ) => void
 }
 
-const Converter: FC<Conversion> = ({ symbols, onConversion }) => {
+enum InputIcon {
+  MAGNIFY,
+  CLEAR
+}
+
+const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
   const [ inputString, setInputString ] = useState( '' ),
   [ errorMessage, setErrorMessage ] = useState( '' ),
   [ conversion, setConversion ] = useState< ConversionResult | null >( null ),
-  inputEl = useRef< HTMLInputElement >( null ),
+  [ inputButtonIcon, setInputButtonIcon ] = useState< InputIcon >( InputIcon.MAGNIFY ),
 
   handleInput = () => {
+    if ( errorMessage ) setErrorMessage( '' )
+    if ( conversion ) {
+      saveConversion( conversion )
+      setConversion( null )
+    }
+    if ( InputIcon.CLEAR === inputButtonIcon ) {
+      setInputButtonIcon( InputIcon.MAGNIFY )
+      setInputString( '' )
+      return
+    }
+
     if ( !inputString ) return
+    setInputButtonIcon( InputIcon.CLEAR )
     try {
       const { fromAmount, fromCurrency, toCurrency }: ConversionResult = parseInput( inputString )
       if ( !symbols[ fromCurrency ])
         setErrorMessage( `Base '${ fromCurrency }' is not supported.` )
       else if ( !symbols[ toCurrency ])
         setErrorMessage( `Base '${ toCurrency }' is not supported.` )
-      else if ( 0 === fromAmount )
+      else if ( 0 >= fromAmount )
         setErrorMessage( 'Amount should be greater than 0.' )
+      else {
+        convertCurrency( fromCurrency, toCurrency, fromAmount ).then( result => {
+          setConversion({ fromAmount, fromCurrency, toCurrency, result })
+        }).catch( err => {
+          if ( err instanceof Error )
+            setErrorMessage( err.message )
+          else if ( 'string' === typeof err )
+            setErrorMessage( err )
+        })
+      }
     }
     catch ( err ) {
-      if ( err instanceof Error )
-        setErrorMessage( err.message )
+      if ( err instanceof Error ) setErrorMessage( err.message )
+      else if ( 'string' === typeof err ) setErrorMessage( err )
     }
   },
 
   handleFocus = () => {
-    setErrorMessage( '' )
+    if ( errorMessage ) setErrorMessage( '' )
+    if ( InputIcon.CLEAR === inputButtonIcon ) setInputButtonIcon( InputIcon.MAGNIFY )
+    if ( conversion ) {
+      saveConversion( conversion )
+      setConversion( null )
+    }
   },
 
   handleInputUpdate = ( ev: React.FormEvent<HTMLInputElement> ) => {
@@ -53,13 +86,12 @@ const Converter: FC<Conversion> = ({ symbols, onConversion }) => {
             type="text"
             placeholder="e.g. 1 AUD to USD"
             value={inputString}
-            ref={inputEl}
             onChange={handleInputUpdate}
             onFocus={handleFocus}
           />
         </div>
         <div className="magnify">
-          <img src={magnifyIcon} alt="magnify" onClick={handleInput}/>
+          <img src={InputIcon.MAGNIFY === inputButtonIcon ? magnifyIcon : closeIcon} alt="magnify" onClick={handleInput}/>
         </div>
       </div>
       { errorMessage && <div className="error">{errorMessage}</div>}
@@ -67,10 +99,10 @@ const Converter: FC<Conversion> = ({ symbols, onConversion }) => {
         <div className='conversion'>
           <div className="currency">
             <div className='base-currency'>
-              1.00 Australian Dollar equals
+              { `${ conversion.fromAmount.toFixed( 2 )} ${ symbols[ conversion.fromCurrency ]} equals` }
             </div>
             <div className='target-currency'>
-              0.64 Euro
+              { `${ conversion.result?.toFixed( 2 )} ${ symbols[ conversion.toCurrency ]}` }
             </div>
           </div>
           <div className="swap">

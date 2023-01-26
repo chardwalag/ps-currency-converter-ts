@@ -4,8 +4,13 @@ import './History.css';
 import closeIcon from '../svg/close.svg';
 import { ConversionResult } from '../utils/type';
 
+type ConversionHistory = {
+  symbols: {[ key: string ]: string },
+  history: ConversionResult[]
+}
 
-const History: FC<{ history: ConversionResult[]}> = () => (
+
+const History: FC<ConversionHistory> = ({ history, symbols }) => (
   <>
     <div className="history-header">
       <div className="label"><h3>Previous amounts</h3></div>
@@ -14,33 +19,17 @@ const History: FC<{ history: ConversionResult[]}> = () => (
       </div>
     </div>
     <div className="history">
-      <div className="previous-amount">
-        <div className="currency">
-            <div>1.00 Australian Dollar equals</div>
-            <div className="target-currency">0.77 US Dollar</div>
-        </div>
-        <div className="close">
-            <img src={closeIcon} alt="close"/>
+      { history.map(({ fromAmount, fromCurrency, toCurrency, result }, idx) => (
+        <div className="previous-amount" key={idx}>
+          <div className="currency">
+              <div>{`${ fromAmount.toFixed( 2 )} ${ symbols[ fromCurrency ]} equals`}</div>
+              <div className="target-currency">{`${ result?.toFixed( 2 )} ${ symbols[ toCurrency ]}`}</div>
           </div>
-      </div>
-      <div className="previous-amount">
-        <div className="currency">
-            <div>1.00 Australian Dollar equals</div>
-            <div className="target-currency">79.63 Japan Yen</div>
+          <div className="close">
+              <img src={closeIcon} alt="close"/>
+            </div>
         </div>
-        <div className="close">
-            <img src={closeIcon} alt="close"/>
-          </div>
-      </div>
-      <div className="previous-amount">
-        <div className="currency">
-            <div>1.00 Australian Dollar equals</div>
-            <div className="target-currency">0.64 Euro</div>
-        </div>
-        <div className="close">
-            <img src={closeIcon} alt="close"/>
-          </div>
-      </div>
+      ))}
     </div>
   </>
 );

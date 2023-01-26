@@ -22,6 +22,9 @@ const App = () => {
       getSymbols().then( symbols => {
         localStorage.setItem( 'symbols', JSON.stringify( symbols ))
         setSymbols( symbols )
+      }).catch( err => {
+        if ( err instanceof Error )
+          alert( err.message )
       })
     }
 
@@ -29,16 +32,18 @@ const App = () => {
     if ( history ) setHistory( JSON.parse( history ))
   }, [])
 
-  const onConversion = ( conversion: ConversionResult ) => {
-
+  const saveConversion = ( conversion: ConversionResult ) => {
+    const conversions = [ conversion, ...history ]
+    setHistory( conversions )
+    localStorage.setItem( 'history', JSON.stringify( conversions ))
   }
 
   return (
     <div className="app">
       <div className="app__content">
         <Header />
-        <Converter symbols={symbols} onConversion={onConversion} />
-        { 0 < history.length && <History history={history} />}
+        <Converter symbols={symbols} saveConversion={saveConversion} />
+        { 0 < history.length && <History history={history} symbols={symbols} />}
       </div>
     </div>
   );
