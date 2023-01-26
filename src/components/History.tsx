@@ -4,14 +4,15 @@ import './History.css';
 import closeIcon from '../svg/close.svg';
 import { ConversionResult } from '../utils/type';
 
+
 type ConversionHistory = {
   symbols: {[ key: string ]: string },
   history: ConversionResult[],
-  clear: () => void
+  clear: () => void,
+  removeItem: ( idx: number ) => void
 }
 
-
-const History: FC<ConversionHistory> = ({ history, symbols, clear }) => (
+const History: FC<ConversionHistory> = ({ history, symbols, clear, removeItem }) => (
   <>
     <div className="history-header">
       <div className="label"><h3>Previous amounts</h3></div>
@@ -27,7 +28,7 @@ const History: FC<ConversionHistory> = ({ history, symbols, clear }) => (
             <div className="target-currency">{`${ result?.toFixed( 2 )} ${ symbols[ toCurrency ]}`}</div>
           </div>
           <div className="close">
-            <img src={ closeIcon } alt="close"/>
+            <img src={ closeIcon } alt="close" onClick={() => removeItem( idx )} />
           </div>
         </div>
       ))}

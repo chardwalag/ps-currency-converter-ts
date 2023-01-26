@@ -13,15 +13,19 @@ const App = () => {
   const [ symbols, setSymbols ] = useState({}),
   [ history, setHistory ] = useState<ConversionResult[]>([]),
 
-  saveConversion = ( conversion: ConversionResult ) => {
-    const conversions = [ conversion, ...history ]
+  saveHistory = ( conversions: ConversionResult[]) => {
     setHistory( conversions )
     localStorage.setItem( 'history', JSON.stringify( conversions ))
   },
 
-  clearConversionHistory = () => {
-    setHistory([])
-    localStorage.setItem( 'history', JSON.stringify([]))
+  saveConversion = ( conversion: ConversionResult ) => saveHistory([ conversion, ...history ]),
+
+  clearConversionHistory = () => saveHistory([]),
+
+  removeConversion = ( idx: number ) => {
+    const conversions = [ ...history ]
+    conversions.splice( idx, 1 )
+    saveHistory( conversions )
   }
 
   useEffect(() => {
@@ -48,7 +52,15 @@ const App = () => {
       <div className="app__content">
         <Header />
         <Converter symbols={ symbols } saveConversion={ saveConversion } />
-        { 0 < history.length && <History history={ history } symbols={ symbols } clear={ clearConversionHistory } />}
+        {
+          0 < history.length &&
+          <History
+            history={ history }
+            symbols={ symbols }
+            clear={ clearConversionHistory }
+            removeItem={ removeConversion }
+          />
+        }
       </div>
     </div>
   );
