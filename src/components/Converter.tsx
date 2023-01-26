@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import './Converter.css';
 import swapIcon from '../svg/swap-vertical.svg';
-import magnify from '../svg/magnify.svg';
+import magnifyIcon from '../svg/magnify.svg';
 
 import { convertCurrency } from '../utils/api';
 
@@ -18,7 +18,7 @@ const Converter: FC<{ symbols: {}}> = ({ symbols }) => {
           <input type="text" placeholder="e.g. 1 AUD to USD" />
         </div>
         <div className="magnify">
-          <img src={magnify} alt="magnify"/>
+          <img src={magnifyIcon} alt="magnify"/>
         </div>
       </div>
       <div className="error">

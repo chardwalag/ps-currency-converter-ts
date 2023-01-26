@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './History.css';
-import close from '../svg/close.svg';
+import closeIcon from '../svg/close.svg';
 
 
 const History = () => (
@@ -19,7 +19,7 @@ const History = () => (
             <div className="target-currency">0.77 US Dollar</div>
         </div>
         <div className="close">
-            <img src={close} alt="close"/>
+            <img src={closeIcon} alt="close"/>
           </div>
       </div>
       <div className="previous-amount">
@@ -28,7 +28,7 @@ const History = () => (
             <div className="target-currency">79.63 Japan Yen</div>
         </div>
         <div className="close">
-            <img src={close} alt="close"/>
+            <img src={closeIcon} alt="close"/>
           </div>
       </div>
       <div className="previous-amount">
@@ -37,7 +37,7 @@ const History = () => (
             <div className="target-currency">0.64 Euro</div>
         </div>
         <div className="close">
-            <img src={close} alt="close"/>
+            <img src={closeIcon} alt="close"/>
           </div>
       </div>
     </div>

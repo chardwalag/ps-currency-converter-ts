@@ -4,7 +4,7 @@ import './App.css';
 
 import Header from './components/Header';
 import Converter from './components/Converter';
-import PreviousConversion from './components/PreviousConversion';
+import History from './components/History';
 import { convertCurrency, getSymbols } from './utils/api';
 
 
@@ -29,7 +29,7 @@ const App = () => {
       <div className="app__content">
         <Header />
         <Converter symbols={symbols} />
-        <PreviousConversion />
+        <History />
       </div>
     </div>
   );
