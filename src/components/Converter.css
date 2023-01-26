@@ -47,6 +47,10 @@
   align-self: center;
 }
 
+.search .magnify:hover {
+  cursor:pointer;
+}
+
 .error {
   background-color: #ffebeb;
   color: #ff5957;

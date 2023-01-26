@@ -6,28 +6,29 @@ import { ConversionResult } from '../utils/type';
 
 type ConversionHistory = {
   symbols: {[ key: string ]: string },
-  history: ConversionResult[]
+  history: ConversionResult[],
+  clear: () => void
 }
 
 
-const History: FC<ConversionHistory> = ({ history, symbols }) => (
+const History: FC<ConversionHistory> = ({ history, symbols, clear }) => (
   <>
     <div className="history-header">
       <div className="label"><h3>Previous amounts</h3></div>
       <div className="clear">
-        <button>CLEAR ALL</button>
+        <button onClick={ clear }>CLEAR ALL</button>
       </div>
     </div>
     <div className="history">
-      { history.map(({ fromAmount, fromCurrency, toCurrency, result }, idx) => (
-        <div className="previous-amount" key={idx}>
+      { history.map(({ fromAmount, fromCurrency, toCurrency, result }, idx ) => (
+        <div className="previous-amount" key={ idx }>
           <div className="currency">
-              <div>{`${ fromAmount.toFixed( 2 )} ${ symbols[ fromCurrency ]} equals`}</div>
-              <div className="target-currency">{`${ result?.toFixed( 2 )} ${ symbols[ toCurrency ]}`}</div>
+            <div>{`${ fromAmount.toFixed( 2 )} ${ symbols[ fromCurrency ]} equals`}</div>
+            <div className="target-currency">{`${ result?.toFixed( 2 )} ${ symbols[ toCurrency ]}`}</div>
           </div>
           <div className="close">
-              <img src={closeIcon} alt="close"/>
-            </div>
+            <img src={ closeIcon } alt="close"/>
+          </div>
         </div>
       ))}
     </div>

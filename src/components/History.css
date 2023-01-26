@@ -34,6 +34,10 @@
   align-self: flex-end;
 }
 
+.history-header .clear button:hover {
+  cursor:pointer;
+}
+
 .history-header .clear button {
   background-color: white;
   border: 1px white;
@@ -58,4 +62,8 @@
 
 .history .previous-amount .close {
   align-self: center;
+}
+
+.history .previous-amount .close:hover {
+  cursor:pointer;
 }

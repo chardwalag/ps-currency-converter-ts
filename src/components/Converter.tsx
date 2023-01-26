@@ -15,10 +15,7 @@ type Conversion = {
   saveConversion: ( conversion: ConversionResult ) => void
 }
 
-enum InputIcon {
-  MAGNIFY,
-  CLEAR
-}
+enum InputIcon { MAGNIFY, CLEAR }
 
 const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
   const [ inputString, setInputString ] = useState( '' ),
