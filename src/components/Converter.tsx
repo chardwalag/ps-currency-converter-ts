@@ -76,6 +76,27 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
 
   handleInputUpdate = ( ev: React.FormEvent<HTMLInputElement> ) => {
     setInputString( ev.currentTarget.value )
+  },
+
+  handleSwap = () => {
+    const { fromCurrency, toCurrency, fromAmount } = conversion!
+    saveConversion( conversion! )
+    setConversion( null )
+    setInputString( `${ fromAmount } ${ toCurrency } to ${ fromCurrency }` )
+    try {
+      convertCurrency( toCurrency, fromCurrency, fromAmount ).then( result => {
+        setConversion({ fromAmount, fromCurrency: toCurrency, toCurrency: fromCurrency, result })
+      }).catch( err => {
+        if ( err instanceof Error )
+          setErrorMessage( err.message )
+        else if ( 'string' === typeof err )
+          setErrorMessage( err )
+      })
+    }
+    catch ( err ) {
+      if ( err instanceof Error ) setErrorMessage( err.message )
+      else if ( 'string' === typeof err ) setErrorMessage( err )
+    }
   }
 
   return (
@@ -106,7 +127,7 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
             </div>
           </div>
           <div className="swap">
-            <img src={swapIcon} alt="swap"/>
+            <img src={swapIcon} alt="swap" onClick={handleSwap} />
           </div>
         </div>
       }
