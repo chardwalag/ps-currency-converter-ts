@@ -5,11 +5,13 @@ import './App.css';
 import Header from './components/Header';
 import Converter from './components/Converter';
 import History from './components/History';
-import { convertCurrency, getSymbols } from './utils/api';
+import { getSymbols } from './utils/api';
+import { ConversionResult } from './utils/type';
 
 
 const App = () => {
-  const [ symbols, setSymbols ] = useState({})
+  const [ symbols, setSymbols ] = useState({}),
+  [ history, setHistory ] = useState<ConversionResult[]>([])
 
   useEffect(() => {
     const symbols = localStorage.getItem( 'symbols' )
@@ -22,14 +24,21 @@ const App = () => {
         setSymbols( symbols )
       })
     }
+
+    const history = localStorage.getItem( 'history' )
+    if ( history ) setHistory( JSON.parse( history ))
   }, [])
+
+  const onConversion = ( conversion: ConversionResult ) => {
+
+  }
 
   return (
     <div className="app">
       <div className="app__content">
         <Header />
-        <Converter symbols={symbols} />
-        <History />
+        <Converter symbols={symbols} onConversion={onConversion} />
+        { 0 < history.length && <History history={history} />}
       </div>
     </div>
   );

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import './History.css';
 import closeIcon from '../svg/close.svg';
+import { ConversionResult } from '../utils/type';
 
 
-const History = () => (
+const History: FC<{ history: ConversionResult[]}> = () => (
   <>
     <div className="history-header">
       <div className="label"><h3>Previous amounts</h3></div>
