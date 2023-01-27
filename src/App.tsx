@@ -10,6 +10,8 @@ import { getSymbols } from './utils/api';
 import { ConversionResult } from './utils/type';
 
 
+const ITEMS_PER_PAGE = 10
+
 const App = () => {
   const [ symbols, setSymbols ] = useState<{[ key: string ]: string }>({}),
   [ history, setHistory ] = useState<ConversionResult[]>([]),
@@ -30,22 +32,17 @@ const App = () => {
     saveHistory( conversions )
   },
 
-  handlePage = ( page: number ) => {
-    setPage( page )
-  }
+  handlePage = ( page: number ) => setPage( page )
 
   useEffect(() => {
     const symbols = localStorage.getItem( 'symbols' )
-    if ( symbols ) {
-      setSymbols( JSON.parse( symbols ))
-    }
+    if ( symbols ) setSymbols( JSON.parse( symbols ))
     else {
       getSymbols().then( symbols => {
         localStorage.setItem( 'symbols', JSON.stringify( symbols ))
         setSymbols( symbols )
       }).catch( err => {
-        if ( err instanceof Error )
-          alert( err.message )
+        if ( err instanceof Error ) alert( err.message )
       })
     }
 
@@ -58,17 +55,15 @@ const App = () => {
       <div className="app__content">
         <Header />
         <Converter symbols={ symbols } saveConversion={ saveConversion } />
-        {
-          0 < history.length &&
+        { 0 < history.length &&
           <History
-            history={ history.slice( 10 * ( page - 1 ), 10 * page )}
+            history={ history.slice( ITEMS_PER_PAGE * ( page - 1 ), ITEMS_PER_PAGE * page )}
             symbols={ symbols }
             clear={ clearConversionHistory }
             removeItem={ removeConversion }
           />
         }
-        {
-          10 < history.length &&
+        { ITEMS_PER_PAGE < history.length &&
           <Pagination 
             className="pagination"
             total={ history.length }

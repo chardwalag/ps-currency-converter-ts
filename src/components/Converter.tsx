@@ -17,6 +17,9 @@ type Conversion = {
 
 enum InputIcon { MAGNIFY, CLEAR }
 
+const CURRENCY_NOT_SAME = 'Currencies should not be the same',
+AMOUNT_GREATER_THAN_ZERO = 'Amount should be greater than 0.'
+
 const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
   const [ inputString, setInputString ] = useState( '' ),
   [ errorMessage, setErrorMessage ] = useState( '' ),
@@ -24,31 +27,35 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
   inputEl = useRef< HTMLInputElement >( null ),
   [ inputButtonIcon, setInputButtonIcon ] = useState< InputIcon >( InputIcon.MAGNIFY ),
 
-  handleInput = () => {
+  notSupported = ( currency: string ) => `Base '${ currency }' is not supported.`,
+
+  cleanUp = () => {
     if ( errorMessage ) setErrorMessage( '' )
     if ( conversion ) {
       saveConversion( conversion )
       setConversion( null )
     }
+  },
+
+  handleInput = () => {
     if ( InputIcon.CLEAR === inputButtonIcon ) {
-      setInputButtonIcon( InputIcon.MAGNIFY )
       setInputString( '' )
       inputEl.current?.focus()
       return
     }
-
     if ( !inputString ) return
+
     setInputButtonIcon( InputIcon.CLEAR )
     try {
       const { fromAmount, fromCurrency, toCurrency }: ConversionResult = parseInput( inputString )
       if ( !symbols[ fromCurrency ])
-        setErrorMessage( `Base '${ fromCurrency }' is not supported.` )
+        setErrorMessage( notSupported( fromCurrency ))
       else if ( !symbols[ toCurrency ])
-        setErrorMessage( `Base '${ toCurrency }' is not supported.` )
+        setErrorMessage( notSupported( toCurrency ))
       else if ( fromCurrency === toCurrency )
-        setErrorMessage( `Currencies should not be the same` )
+        setErrorMessage( CURRENCY_NOT_SAME )
       else if ( 0 >= fromAmount )
-        setErrorMessage( 'Amount should be greater than 0.' )
+        setErrorMessage( AMOUNT_GREATER_THAN_ZERO )
       else {
         convertCurrency( fromCurrency, toCurrency, fromAmount ).then( result => {
           setConversion({ fromAmount, fromCurrency, toCurrency, result })
@@ -67,17 +74,11 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
   },
 
   handleFocus = () => {
-    if ( errorMessage ) setErrorMessage( '' )
     if ( InputIcon.CLEAR === inputButtonIcon ) setInputButtonIcon( InputIcon.MAGNIFY )
-    if ( conversion ) {
-      saveConversion( conversion )
-      setConversion( null )
-    }
+    cleanUp()
   },
 
-  handleInputUpdate = ( ev: React.FormEvent<HTMLInputElement> ) => {
-    setInputString( ev.currentTarget.value )
-  },
+  handleInputUpdate = ( ev: React.FormEvent<HTMLInputElement> ) => setInputString( ev.currentTarget.value ),
 
   handleSwap = () => {
     const { fromCurrency, toCurrency, fromAmount } = conversion!

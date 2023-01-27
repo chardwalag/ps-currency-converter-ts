@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import './History.css';
 import closeIcon from '../svg/close.svg';
