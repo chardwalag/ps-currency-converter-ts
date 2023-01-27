@@ -38,7 +38,7 @@ export const fetchRates = async (baseCurrency: string) => {
   }
 };
 
-export const convertCurrency = async (fromCurrency: string, toCurrency: string, amount: number) => {
+export let convertCurrency = async (fromCurrency: string, toCurrency: string, amount: number) => {
   try {
     const response = await api({ endpoint: '/convert', params: { from: fromCurrency, to: toCurrency, amount: amount.toString() } });
     const responseText = await response.text();
@@ -58,7 +58,7 @@ export const convertCurrency = async (fromCurrency: string, toCurrency: string, 
   }
 }
 
-export const getSymbols = async () => {
+export let getSymbols = async () => {
   try {
     const response = await api({ endpoint: '/symbols'});
     const responseText = await response.text();

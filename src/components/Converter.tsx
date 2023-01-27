@@ -1,4 +1,5 @@
 import React, { FC, useState, useRef } from 'react';
+import { Spin } from 'antd';
 
 import './Converter.css';
 import swapIcon from '../svg/swap-vertical.svg';
@@ -17,7 +18,7 @@ type Conversion = {
 
 enum InputIcon { MAGNIFY, CLEAR }
 
-const CURRENCY_NOT_SAME = 'Currencies should not be the same',
+export const CURRENCY_NOT_SAME = 'Currencies should not be the same',
 AMOUNT_GREATER_THAN_ZERO = 'Amount should be greater than 0.'
 
 const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
@@ -26,6 +27,7 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
   [ conversion, setConversion ] = useState< ConversionResult | null >( null ),
   inputEl = useRef< HTMLInputElement >( null ),
   [ inputButtonIcon, setInputButtonIcon ] = useState< InputIcon >( InputIcon.MAGNIFY ),
+  [ fetching, setFetching ] = useState( false ),
 
   notSupported = ( currency: string ) => `Base '${ currency }' is not supported.`,
 
@@ -57,9 +59,12 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
       else if ( 0 >= fromAmount )
         setErrorMessage( AMOUNT_GREATER_THAN_ZERO )
       else {
+        setFetching( true )
         convertCurrency( fromCurrency, toCurrency, fromAmount ).then( result => {
+          setFetching( false )
           setConversion({ fromAmount, fromCurrency, toCurrency, result })
         }).catch( err => {
+          setFetching( false )
           if ( err instanceof Error )
             setErrorMessage( err.message )
           else if ( 'string' === typeof err )
@@ -86,9 +91,12 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
     setConversion( null )
     setInputString( `${ fromAmount } ${ toCurrency } to ${ fromCurrency }` )
     try {
+      setFetching( true )
       convertCurrency( toCurrency, fromCurrency, fromAmount ).then( result => {
+        setFetching( false )
         setConversion({ fromAmount, fromCurrency: toCurrency, toCurrency: fromCurrency, result })
       }).catch( err => {
+        setFetching( false )
         if ( err instanceof Error )
           setErrorMessage( err.message )
         else if ( 'string' === typeof err )
@@ -118,6 +126,7 @@ const Converter: FC<Conversion> = ({ symbols, saveConversion }) => {
           <img src={ InputIcon.MAGNIFY === inputButtonIcon ? magnifyIcon : closeIcon } alt="magnify" onClick={ handleInput }/>
         </div>
       </div>
+      { fetching && <Spin className="wait" size="large" />}
       { errorMessage && <div className="error">{ errorMessage }</div>}
       { conversion &&
         <div className='conversion'>

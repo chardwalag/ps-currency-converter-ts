@@ -25,7 +25,7 @@ const History: FC<ConversionHistory> = ({ history, symbols, clear, removeItem })
         <div className="previous-amount" key={ idx }>
           <div className="currency">
             <div>{`${ fromAmount.toFixed( 2 )} ${ symbols[ fromCurrency ]} equals`}</div>
-            <div className="target-currency">{`${ result?.toFixed( 2 )} ${ symbols[ toCurrency ]}`}</div>
+            <div className="target-currency">{`${ result!.toFixed( 2 )} ${ symbols[ toCurrency ]}`}</div>
           </div>
           <div className="close">
             <img src={ closeIcon } alt="close" onClick={() => removeItem( idx )} />

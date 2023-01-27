@@ -51,6 +51,11 @@
   cursor:pointer;
 }
 
+.wait {
+  margin-top: 10px;
+  margin-left: 45%;
+}
+
 .error {
   background-color: #ffebeb;
   color: #ff5957;

@@ -4,6 +4,8 @@ import { ConversionResult } from './type'
 
 type ParseInput = (input: string) => ConversionResult
 
+export const INVALID_STRUCTURE = 'Invalid input structure'
+
 export const parseInput: ParseInput = (input: string) => {
   const tokens = input.split( ' ' )
   if (
@@ -13,7 +15,7 @@ export const parseInput: ParseInput = (input: string) => {
     !tokens[ 1 ] ||
     !tokens[ 3 ]
   ) {
-    throw new Error( 'Invalid input structure' );
+    throw new Error( INVALID_STRUCTURE );
   }
 
   return {

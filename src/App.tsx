@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Pagination } from 'antd';
+import { Pagination, Spin } from 'antd';
 
 import './App.css';
 
@@ -16,6 +16,7 @@ const App = () => {
   const [ symbols, setSymbols ] = useState<{[ key: string ]: string }>({}),
   [ history, setHistory ] = useState<ConversionResult[]>([]),
   [ page, setPage ] = useState( 1 ),
+  [ fecthing, setFetching ] = useState( true ),
 
   saveHistory = ( conversions: ConversionResult[]) => {
     setHistory( conversions )
@@ -36,12 +37,17 @@ const App = () => {
 
   useEffect(() => {
     const symbols = localStorage.getItem( 'symbols' )
-    if ( symbols ) setSymbols( JSON.parse( symbols ))
+    if ( symbols ) {
+      setFetching( false )
+      setSymbols( JSON.parse( symbols ))
+    }
     else {
       getSymbols().then( symbols => {
+        setFetching( false )
         localStorage.setItem( 'symbols', JSON.stringify( symbols ))
         setSymbols( symbols )
       }).catch( err => {
+        setFetching( false )
         if ( err instanceof Error ) alert( err.message )
       })
     }
@@ -52,28 +58,31 @@ const App = () => {
 
   return (
     <div className="app">
-      <div className="app__content">
-        <Header />
-        <Converter symbols={ symbols } saveConversion={ saveConversion } />
-        { 0 < history.length &&
-          <History
-            history={ history.slice( ITEMS_PER_PAGE * ( page - 1 ), ITEMS_PER_PAGE * page )}
-            symbols={ symbols }
-            clear={ clearConversionHistory }
-            removeItem={ removeConversion }
-          />
-        }
-        { ITEMS_PER_PAGE < history.length &&
-          <Pagination 
-            className="pagination"
-            total={ history.length }
-            current={ page }
-            showSizeChanger={ false }
-            showTotal={ total => `${ total } items`}
-            onChange={ handlePage }
-          />
-        }
-      </div>
+      { fecthing && <Spin size="large" />}
+      { !fecthing &&
+        <div className="app__content" data-testid="app_content">
+          <Header />
+          <Converter symbols={ symbols } saveConversion={ saveConversion } />
+          { 0 < history.length &&
+            <History
+              history={ history.slice( ITEMS_PER_PAGE * ( page - 1 ), ITEMS_PER_PAGE * page )}
+              symbols={ symbols }
+              clear={ clearConversionHistory }
+              removeItem={ removeConversion }
+            />
+          }
+          { ITEMS_PER_PAGE < history.length &&
+            <Pagination 
+              className="pagination"
+              total={ history.length }
+              current={ page }
+              showSizeChanger={ false }
+              showTotal={ total => `${ total } items`}
+              onChange={ handlePage }
+            />
+          }
+        </div>
+      }
     </div>
   );
 };
